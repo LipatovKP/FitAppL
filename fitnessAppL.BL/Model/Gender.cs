@@ -22,7 +22,7 @@ namespace FitnessAppL.BL.Model
         /// </summary>
         /// <param name="name">Имя пола.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Gender(string name) 
+        public Gender(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

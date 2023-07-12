@@ -18,47 +18,65 @@ namespace FitnessAppL.BL.Controller
         /// <summary>
         /// ПОльзователь приложения.
         /// </summary>
-        public User User { get; }
+        public List<User> Users {  get; }
+
+        public User CurrentUser { get; }
 
         /// <summary>
         /// Создание контроллера пользователя.
         /// </summary>
         /// <param name="user"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public UserController(string userName, string genderName, DateTime birthDay, double weight, double height) 
+        public UserController(string userName) 
         {
-            // TODO: Проверка
-            var gender = new Gender(genderName);
-            User = new User(userName, gender, birthDay, weight, height);
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                throw new ArgumentNullException("Имя пользователя не может быть пустым", nameof(userName));
+            }
+            
+            Users = GetUserData();
 
-            //User = user ?? throw new ArgumentNullException("Пользователь не может быть равен NULL.", nameof(user));
+            CurrentUser = Users.SingleOrDefault(u => u.Name == userName);
+
+            if (CurrentUser == null)
+            {
+                CurrentUser = new User(userName);
+                Users.Add(CurrentUser);
+                Save();
+            }
         }
 
-        public UserController()
+        /// <summary>
+        /// Получить сохраненный список пользователей.
+        /// </summary>
+        /// <returns></returns>
+        private List<User> GetUserData()
         {
             var formatter = new BinaryFormatter();
 
             using (var fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                if (formatter.Deserialize(fs) is User user)
+                if (formatter.Deserialize(fs) is List<User> users)
                 {
-                    User = user;
+                    return users;
                 }
-
-                // TODO: Что делать, если не прочитали пользователя?
+                else
+                {
+                    return new List<User>();
+                }
             }
         }
 
         /// <summary>
         /// Сохранить данные пользователя.
         /// </summary>
-        public void Save()
+        private void Save()
         {
             var formatter = new BinaryFormatter();
 
             using (var fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                formatter.Serialize(fs, User);
+                formatter.Serialize(fs, Users);
             }
         }
         /// <summary>

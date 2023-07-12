@@ -20,21 +20,58 @@ namespace FitnessAppL.CMD
 
             var name = Console.ReadLine();
 
-            Console.WriteLine("Укажите ваш пол.");
-            var gender = Console.ReadLine();
+            var userController = new UserController(name);
 
-            Console.WriteLine("Укажите вашу дату рождения.");
-            var birthDate = DateTime.Parse(Console.ReadLine()); // TODO: Переписать
+            if (userController.IsNewUser)
+            {
+                Console.Write("Укажите пол: ");
+                var gender = Console.ReadLine();
+                DateTime birthDate;
+                double weight = ParseDouble("вес");
+                double heigth = ParseDouble("рост");
+                birthDate = ParsDateTime();
 
-            Console.WriteLine("Укажите ваш вес.");
-            var weight = double.Parse(Console.ReadLine());
-            
-            Console.WriteLine("Укажите ваш рост.");
-            var height = double.Parse(Console.ReadLine());
+                userController.SetNewUserDate(gender, birthDate, weight, heigth);
 
-            var userController = new UserController(name, gender, birthDate, weight, height);
-            userController.Save();
+            }
+            Console.WriteLine(userController.CurrentUser);
 
+
+        }
+
+        private static DateTime ParsDateTime()
+        {
+            DateTime birthDate;
+            while (true)
+            {
+                Console.Write("Укажите дату рождения (dd.MM.yyyy): ");
+                if (DateTime.TryParse(Console.ReadLine(), out birthDate))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Не верный формат даты рождения");
+                }
+            }
+
+            return birthDate;
+        }
+
+        private static double ParseDouble(string name)
+        {
+            while (true)
+            {
+                Console.Write($"Введите {name}): ");
+                if (double.TryParse(Console.ReadLine(), out double value))
+                {
+                    return value;
+                }
+                else
+                {
+                    Console.WriteLine($"Не верный формат {name}");
+                }
+            }
         }
     }
 }

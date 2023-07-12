@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace FitnessAppL.BL.Model
         /// Рост.
         /// </summary>
         public double Height { get; set; }
+
+        //DateTime nowDate = DateTime.Today;
+        //int age = nowDate.Year - birthDate.Year;
+        //if(birthDate > nowDate.AddYears(-age)) age--;
+        public int Age { get { return DateTime.Now.Year - BirthDate.Year; } }
         #endregion
         
         /// <summary>
@@ -79,9 +85,18 @@ namespace FitnessAppL.BL.Model
             Height = height;
         }
 
+        public User(string name) 
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException("Имя пользователя не может быть пустым или NULL.", nameof(name));
+            }
+
+            Name = name;
+        }
         public override string ToString()
         {
-            return Name;
+            return Name + " " + Age;
         }
     }
 }
