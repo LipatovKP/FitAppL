@@ -22,6 +22,8 @@ namespace FitnessAppL.BL.Controller
 
         public User CurrentUser { get; }
 
+        public bool IsNewUser { get; } = false;
+
         /// <summary>
         /// Создание контроллера пользователя.
         /// </summary>
@@ -42,6 +44,7 @@ namespace FitnessAppL.BL.Controller
             {
                 CurrentUser = new User(userName);
                 Users.Add(CurrentUser);
+                IsNewUser = true;
                 Save();
             }
         }
@@ -67,10 +70,21 @@ namespace FitnessAppL.BL.Controller
             }
         }
 
+        public void SetNewUserDate(string genderName, DateTime birthDate, double weight = 1, double height = 1)
+        {
+            // Проверка
+
+            CurrentUser.Gender = new Gender(genderName);
+            CurrentUser.BirthDate = birthDate;
+            CurrentUser.Weight = weight;
+            CurrentUser.Height = height;
+            Save();
+        }
+
         /// <summary>
         /// Сохранить данные пользователя.
         /// </summary>
-        private void Save()
+        public void Save()
         {
             var formatter = new BinaryFormatter();
 

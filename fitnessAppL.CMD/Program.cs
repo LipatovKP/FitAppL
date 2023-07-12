@@ -26,10 +26,10 @@ namespace FitnessAppL.CMD
             {
                 Console.Write("Укажите пол: ");
                 var gender = Console.ReadLine();
-                DateTime birthDate;
+                DateTime birthDate = ParsDateTime();
                 double weight = ParseDouble("вес");
                 double heigth = ParseDouble("рост");
-                birthDate = ParsDateTime();
+                
 
                 userController.SetNewUserDate(gender, birthDate, weight, heigth);
 
